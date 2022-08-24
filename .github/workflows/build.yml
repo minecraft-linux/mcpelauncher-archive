@@ -18,9 +18,9 @@ jobs:
             # Update packages
             apt update 
             # Install ubuntu dependencies
-            apt install -y git libc-dev libxi-dev libx11-dev libxcursor-dev cmake clang libssl-dev libpulse-dev libxrandr-dev libxinerama-dev
+            DEBIAN_FRONTEND=noninteractive apt install -y git libc-dev libxi-dev libx11-dev libxcursor-dev cmake clang libssl-dev libpulse-dev libxrandr-dev libxinerama-dev
             # Install fake x11 server for tests
-            apt install -y xserver-xorg-video-dummy libgl1-mesa-dri
+            DEBIAN_FRONTEND=noninteractive apt install -y xserver-xorg-video-dummy libgl1-mesa-dri
         - os: ubuntu-latest
           image: fedora:latest
           deps: |

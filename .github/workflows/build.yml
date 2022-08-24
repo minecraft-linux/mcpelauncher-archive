@@ -42,9 +42,6 @@ jobs:
     - name: CMake Configure
       run: |
         cmake -S mcpelauncher -B build -DBUILD_WEBVIEW=OFF -DENABLE_QT_ERROR_UI=OFF -DGAMEWINDOW_SYSTEM=GLFW -DJNI_USE_JNIVM=ON
-      env:
-        CC: clang
-        CXX: clang++
     - name: CMake Build
       run: |
         cmake --build build --parallel

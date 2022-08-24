@@ -42,7 +42,7 @@
 #include "linker_reloc_iterators.h"
 #include "linker_sleb128.h"
 #include "linker_soinfo.h"
-#include "private/bionic_globals.h"
+//#include "private/bionic_globals.h"
 
 static bool is_tls_reloc(ElfW(Word) type) {
   switch (type) {
@@ -76,9 +76,9 @@ class Relocator {
   const ElfW(Sym)* cache_sym = nullptr;
   soinfo* cache_si = nullptr;
 
-  std::vector<TlsDynamicResolverArg>* tlsdesc_args;
-  std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
-  size_t tls_tp_base = 0;
+  //std::vector<TlsDynamicResolverArg>* tlsdesc_args;
+  //std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
+  //size_t tls_tp_base = 0;
 
   __attribute__((always_inline))
   const char* get_string(ElfW(Word) index) {
@@ -228,7 +228,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
   auto get_addend_rel   = [&]() -> ElfW(Addr) { return *static_cast<ElfW(Addr)*>(rel_target); };
   auto get_addend_norel = [&]() -> ElfW(Addr) { return 0; };
 #endif
-
+#if 0
   if (IsGeneral && is_tls_reloc(r_type)) {
     if (r_sym == 0) {
       // By convention in ld.bfd and lld, an omitted symbol on a TLS relocation
@@ -264,6 +264,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       sym_addr = sym->st_value;
     }
   } else {
+#endif
     if (r_sym == 0) {
       // Do nothing.
     } else {
@@ -291,7 +292,9 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
         }
       }
     }
+#if 0
   }
+#endif
 
   if constexpr (IsGeneral || Mode == RelocMode::JumpTable) {
     if (r_type == R_GENERIC_JUMP_SLOT) {

@@ -38,12 +38,12 @@
 #include "linker_globals.h"
 #include "linker_phdr.h"
 #include "linker_relocate.h"
-#include "linker_tls.h"
+//#include "linker_tls.h"
 #include "linker_utils.h"
 
 #include "private/bionic_auxv.h"
 #include "private/bionic_call_ifunc_resolver.h"
-#include "private/bionic_globals.h"
+//#include "private/bionic_globals.h"
 //#include "private/bionic_tls.h"
 // #include "private/KernelArgumentBlock.h"
 
@@ -59,7 +59,7 @@
 
 #include <vector>
 
-__LIBC_HIDDEN__ extern "C" void _start();
+//__LIBC_HIDDEN__ extern "C" void _start();
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
@@ -578,7 +578,7 @@ static void set_bss_vma_name(soinfo* si) {
   }
 }
 #endif
-
+#if 0
 // TODO: There is a similar ifunc resolver calling loop in libc_init_static.cpp, but that version
 // uses weak symbols, which don't work in the linker prior to its relocation. This version also
 // supports a load bias. When we stop supporting the gold linker in the NDK, then maybe we can use
@@ -604,7 +604,7 @@ static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
   }
 }
 #endif
-
+#endif
 #if 0
 // Usable before ifunc resolvers have been called. This function is compiled with -ffreestanding.
 static void linker_memclr(void* dst, size_t cnt) {

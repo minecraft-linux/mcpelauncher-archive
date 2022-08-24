@@ -68,11 +68,11 @@
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
 #include "linker_relocate.h"
-#include "linker_tls.h"
+//#include "linker_tls.h"
 #include "linker_utils.h"
 
 #include "private/bionic_call_ifunc_resolver.h"
-#include "private/bionic_globals.h"
+//#include "private/bionic_globals.h"
 #include "android-base/macros.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"

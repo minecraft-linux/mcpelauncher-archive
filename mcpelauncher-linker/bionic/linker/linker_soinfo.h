@@ -35,9 +35,9 @@
 #include <vector>
 #include <unordered_map>
 
-#include "private/bionic_elf_tls.h"
+//#include "private/bionic_elf_tls.h"
 #include "linker_namespaces.h"
-#include "linker_tls.h"
+//#include "linker_tls.h"
 
 #define FLAG_LINKED           0x00000001
 #define FLAG_EXE              0x00000004 // The main executable
@@ -145,11 +145,12 @@ struct version_info {
 
 // TODO(dimitry): remove reference from soinfo member functions to this class.
 class VersionTracker;
-
+#if 0
 struct soinfo_tls {
   TlsSegment segment;
   size_t module_id = kTlsUninitializedModuleId;
 };
+#endif
 
 #if defined(__work_around_b_24465209__)
 #define SOINFO_NAME_LEN 128
@@ -345,9 +346,11 @@ struct soinfo {
   void add_secondary_namespace(android_namespace_t* secondary_ns);
   android_namespace_list_t& get_secondary_namespaces();
 
+#if 0
   soinfo_tls* get_tls() const {
     return has_min_version(5) ? tls_.get() : nullptr;
   }
+#endif
 
   void set_mapped_by_caller(bool reserved_map);
   bool is_mapped_by_caller() const;
@@ -438,8 +441,10 @@ struct soinfo {
   size_t relr_count_;
 
   // version >= 5
+#if 0
   std::unique_ptr<soinfo_tls> tls_;
   std::vector<TlsDynamicResolverArg> tlsdesc_args_;
+#endif
 
 public:
   std::unordered_map<std::string, std::shared_ptr<ElfW(Sym)>> symbols;

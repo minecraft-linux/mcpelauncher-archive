@@ -1,0 +1,61 @@
+on:
+  workflow_dispatch:
+  push:
+  
+ jobs:
+   build:
+     strategy:
+       fail-fast: false
+       matrix:
+         include:
+         - os: ubuntu-latest
+           image: alpine:latest
+           deps: |
+             apk add clang git cmake make libgcc gcc musl-dev libc-dev g++ libx11-dev mesa-dev curl-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev bsd-compat-headers curl xorg-server xf86-video-dummy mesa-dri-gallium
+         - os: ubuntu-latest
+           image: ubuntu:latest
+           deps: |
+             # Update packages
+             apt update 
+             # Install ubuntu dependencies
+             apt install -y libc-dev libxi-dev libx11-dev libxcursor-dev cmake clang libssl-dev libpulse-dev libxrandr-dev libxinerama-dev
+             # Install fake x11 server for tests
+             apt install -y xserver-xorg-video-dummy libgl1-mesa-dri
+         - os: ubuntu-latest
+           image: fedora:latest
+           deps: |
+             # Install fedora dependencies
+             dnf -y install cmake clang libstdc++ glibc-devel zlib-devel libX11-devel libXi-devel libXinerama-devel libXcursor-devel libXrandr-devel openssl-devel libcurl-devel mesa-libEGL-devel pulseaudio-libs-devel
+             # Install fake x11 server for tests
+             dnf -y install xorg-x11-drv-dummy mesa-dri-drivers
+         - os: ubuntu-latest
+           image: centos:latest
+           deps: |
+             # Install centos dependencies
+             dnf -y install cmake clang libstdc++ glibc-devel zlib-devel libX11-devel libXi-devel libXinerama-devel libXcursor-devel libXrandr-devel openssl-devel libcurl-devel mesa-libEGL-devel pulseaudio-libs-devel
+             # Install fake x11 server for tests
+             dnf -y install xorg-x11-drv-dummy mesa-dri-drivers
+     runs-on: ${{ matrix.os }}
+     container: ${{ matrix.image || '' }}
+     name: ${{ matrix.image || matrix.os }}
+     steps:
+     - name: Install Dependencies
+       run: ${{ matrix.deps }}
+       if: ${{ matrix.deps }}
+     - name: Get Sources
+       run: |
+         git clone https://github.com/minecraft-linux/mcpelauncher-archive mcpelauncher
+         git checkout "$GITHUB_SHA"
+     - name: CMake Configure
+       run: |
+         cmake -S mcpelauncher -B build -DBUILD_WEBVIEW=OFF -DENABLE_QT_ERROR_UI=OFF -DGAMEWINDOW_SYSTEM=GLFW -DJNI_USE_JNIVM=ON
+     - name: CMake Build
+       run: |
+         cmake --build build --parallel
+     - name: Pack
+       run: |
+         tar -cf ./release.tar build/
+     - uses: actions/upload-artifact@v3
+       with:
+         name: build-${{ strategy.job-index }}
+         path: release.tar

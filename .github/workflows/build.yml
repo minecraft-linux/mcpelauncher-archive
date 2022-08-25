@@ -20,6 +20,7 @@ jobs:
             curl -L --output cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.24.1/cmake-3.24.1-linux-x86_64.tar.gz
             tar xf cmake.tar.gz
             echo "$PWD/$(echo cmake-*)/bin" > "$GITHUB_PATH"
+          cmake_configure_flags: -DX11_X11_LIB=/usr/lib/x86_64-linux-gnu/libX11.so
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.image || '' }}
     name: ${{ matrix.image || matrix.os }}
@@ -33,7 +34,7 @@ jobs:
         git -C mcpelauncher checkout "$GITHUB_SHA"
     - name: CMake Configure
       run: |
-        cmake -S mcpelauncher -B build -DBUILD_WEBVIEW=OFF -DENABLE_QT_ERROR_UI=OFF -DGAMEWINDOW_SYSTEM=GLFW -DJNI_USE_JNIVM=ON
+        cmake -S mcpelauncher -B build -DBUILD_WEBVIEW=OFF -DENABLE_QT_ERROR_UI=OFF -DGAMEWINDOW_SYSTEM=GLFW -DJNI_USE_JNIVM=ON${{ matrix.cmake_configure_flags && format(' {0}', matrix.cmake_configure_flags) || '' }}
       env:
         CC: clang
         CXX: clang++

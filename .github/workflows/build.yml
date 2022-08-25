@@ -14,9 +14,12 @@ jobs:
             # Update packages
             apt update 
             # Install ubuntu dependencies
-            DEBIAN_FRONTEND=noninteractive apt install -y git libc-dev libxi-dev libx11-dev libxcursor-dev cmake clang libssl-dev libpulse-dev libxrandr-dev libxinerama-dev libcurl4-openssl-dev
+            DEBIAN_FRONTEND=noninteractive apt install -y curl tar git libc-dev libxi-dev libx11-dev libxcursor-dev clang libssl-dev libpulse-dev libxrandr-dev libxinerama-dev libcurl4-openssl-dev
             # Install fake x11 server for tests
             DEBIAN_FRONTEND=noninteractive apt install -y xserver-xorg-video-dummy libgl1-mesa-dri
+            curl -L --output cmake.tar.gz 
+            tar xf cmake.tar.gz
+            echo "$PWD/$(echo cmake-*)/bin" > "$GITHUB_PATH"
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.image || '' }}
     name: ${{ matrix.image || matrix.os }}
